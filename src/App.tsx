@@ -3,12 +3,14 @@ import React from "react";
 import Nav from "./components/Nav";
 import { styled } from "styled-components";
 import Banner from "./components/Banner";
+import Category from "./components/Category";
 
 function App() {
   return (
     <Container>
       <Nav />
       <Banner />
+      <Category></Category>
     </Container>
   );
 }
