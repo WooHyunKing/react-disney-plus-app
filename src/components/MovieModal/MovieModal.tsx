@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import "./MovieModal.css";
 import { IMovie } from "../../interfaces/movieInterface";
 
 const MovieModal = ({
@@ -30,7 +30,7 @@ const MovieModal = ({
               <span className="modal__user-perc">100% for you</span>{" "}
               {release_date}
             </p>
-            <h2 className="modal__title">{title}</h2>
+            <h2 className="modal__title">{title ? title : name}</h2>
             <p className="modal__overview">평점 : {vote_average}</p>
             <p className="modal__overview">{overview}</p>
           </div>
