@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import instance from "../api/axios";
 import { IMovie } from "../interfaces/movieInterface";
 import "./Row.css";
+import MovieModal from "./MovieModal/MovieModal";
 
 const Row = ({
   title,
@@ -13,6 +14,8 @@ const Row = ({
   fetchUrl: string;
 }) => {
   const [movies, setMovies] = useState<IMovie[]>([]);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [movieSelected, setMovieSelected] = useState<IMovie>({});
 
   const fetchMovies = useCallback(async () => {
     const response = await instance.get(fetchUrl);
@@ -21,11 +24,15 @@ const Row = ({
     // setMovies(data);
   }, [fetchUrl]);
 
+  const handleClick = (movie: IMovie) => {
+    setModalOpen(true);
+    setMovieSelected(movie);
+  };
+
   useEffect(() => {
     fetchMovies();
   }, [fetchMovies]);
-
-  console.log(document.getElementById(id));
+  console.log(movies);
 
   return (
     <div>
@@ -48,7 +55,9 @@ const Row = ({
               className="row__poster"
               src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`}
               alt={movie.name}
-              onClick={() => {}}
+              onClick={() => {
+                handleClick(movie);
+              }}
             />
           ))}
         </div>
@@ -63,6 +72,9 @@ const Row = ({
           </span>
         </div>
       </div>
+      {modalOpen && (
+        <MovieModal {...movieSelected} setModalOpen={setModalOpen} />
+      )}
     </div>
   );
 };
