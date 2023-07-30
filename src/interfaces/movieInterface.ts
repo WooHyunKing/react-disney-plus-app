@@ -68,5 +68,6 @@ export interface IMovie {
   vote_average?: number;
   vote_count?: number;
   name?: string;
+  movie_type?: string;
   setModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
