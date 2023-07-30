@@ -9,7 +9,6 @@ import requests from "../../api/request";
 const MainPage = () => {
   return (
     <Container>
-      <Nav />
       <Banner />
       <Category></Category>
       <Row title="Trending Now" id="TN" fetchUrl={requests.fetchTrending} />

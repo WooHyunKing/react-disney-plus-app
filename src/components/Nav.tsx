@@ -1,19 +1,32 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 const Nav = () => {
   const [show, setShow] = useState<boolean>(false);
+  const { pathname } = useLocation();
+  const [keyword, setKeyword] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+    navigate(`/search?q=${e.target.value}`);
+  };
+
+  const handleScroll = () => {
+    if (window.scrollY > 50) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
+  };
+
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 50) {
-        setShow(true);
-      } else {
-        setShow(false);
-      }
-    });
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener("scroll", () => {});
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -26,6 +39,17 @@ const Nav = () => {
           onClick={() => (window.location.href = "/")}
         />
       </Logo>
+      {pathname === "/" ? (
+        <Login>Login</Login>
+      ) : (
+        <Input
+          value={keyword}
+          onChange={handleChange}
+          className="nav__input"
+          type="text"
+          placeholder="영화를 검색해주세요."
+        />
+      )}
     </NavWrapper>
   );
 };
