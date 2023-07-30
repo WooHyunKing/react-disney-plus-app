@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import instance from "../../api/axios";
 import { IMovie } from "../../interfaces/movieInterface";
 import "./SearchPage.css";
+import { useDebounce } from "../../hooks/useDebounce";
 
 const SearchPage = () => {
   const [searchResults, setSearchResults] = useState<IMovie[]>([]);
@@ -13,7 +14,7 @@ const SearchPage = () => {
 
   let query = useQuery();
 
-  const searchTerm = query.get("q");
+  const searchTerm = useDebounce(query.get("q") as string, 500);
 
   const fetchSearchMovie = async (searchTerm: string) => {
     try {
