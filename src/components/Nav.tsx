@@ -6,6 +6,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 import { sign } from "crypto";
 
@@ -13,6 +14,7 @@ const Nav = () => {
   const [show, setShow] = useState<boolean>(false);
   const { pathname } = useLocation();
   const [keyword, setKeyword] = useState("");
+  const [userData, setUserData] = useState<any>({});
 
   const navigate = useNavigate();
   const auth = getAuth();
@@ -25,8 +27,21 @@ const Nav = () => {
 
   const handleAuth = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {})
+      .then((result) => {
+        console.log(result);
+        setUserData(result.user);
+        localStorage.setItem("userData", JSON.stringify(result.user));
+      })
       .catch((error) => alert(error.message));
+  };
+
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        setUserData({});
+        navigate("/");
+      })
+      .catch((error) => console.log(error));
   };
 
   const handleScroll = () => {
@@ -67,13 +82,21 @@ const Nav = () => {
       {pathname === "/" ? (
         <Login onClick={handleAuth}>Login</Login>
       ) : (
-        <Input
-          value={keyword}
-          onChange={handleChange}
-          className="nav__input"
-          type="text"
-          placeholder="영화를 검색해주세요."
-        />
+        <>
+          <Input
+            value={keyword}
+            onChange={handleChange}
+            className="nav__input"
+            type="text"
+            placeholder="영화를 검색해주세요."
+          />
+          <SignOut>
+            <UserImg src={userData.photoURL} alt={userData.displayName} />
+            <DropDown onClick={handleSignOut}>
+              <span>Sign Out</span>
+            </DropDown>
+          </SignOut>
+        </>
       )}
     </NavWrapper>
   );
@@ -81,37 +104,37 @@ const Nav = () => {
 
 export default Nav;
 
-// const DropDown = styled.div`
-//   position: absolute;
-//   top: 48px;
-//   right: 0px;
-//   background: rgb(19, 19, 19)
-//   border: 1px solid rgba(151, 151, 151, 0.34);
-//   border-radius:  4px;
-//   box-shadow: rgb(0 0 0 /50%) 0px 0px 18px 0px;
-//   padding: 10px;
-//   font-size: 14px;
-//   letter-spacing: 3px;
-//   width: 100%;
-//   opacity: 0;
-// `;
+const DropDown = styled.div`
+  position: absolute;
+  top: 48px;
+  right: 0px;
+  background: rgb(19, 19, 19);
+  border: 1px solid rgba(151, 151, 151, 0.34);
+  border-radius: 4px;
+  box-shadow: rgb(0 0 0 /50%) 0px 0px 18px 0px;
+  padding: 10px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  width: 100%;
+  opacity: 0;
+`;
 
-// const SignOut = styled.div`
-//   position: relative;
-//   height: 48px;
-//   width: 48px;
-//   display: flex;
-//   cursor: pointer;
-//   align-items: center;
-//   justify-content: center;
+const SignOut = styled.div`
+  position: relative;
+  height: 48px;
+  width: 48px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
 
-//   &:hover {
-//     ${DropDown} {
-//       opacity: 1;
-//       transition-duration: 1s;
-//     }
-//   }
-// `;
+  &:hover {
+    ${DropDown} {
+      opacity: 1;
+      transition-duration: 1s;
+    }
+  }
+`;
 
 const UserImg = styled.img`
   border-radius: 50%;
