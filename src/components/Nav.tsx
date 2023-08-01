@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { sign } from "crypto";
 
 const Nav = () => {
   const [show, setShow] = useState<boolean>(false);
@@ -8,10 +15,18 @@ const Nav = () => {
   const [keyword, setKeyword] = useState("");
 
   const navigate = useNavigate();
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
     navigate(`/search?q=${e.target.value}`);
+  };
+
+  const handleAuth = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {})
+      .catch((error) => alert(error.message));
   };
 
   const handleScroll = () => {
@@ -21,6 +36,16 @@ const Nav = () => {
       setShow(false);
     }
   };
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/");
+      } else if (user && pathname === "/") {
+        navigate("/main");
+      }
+    });
+  }, [auth, navigate, pathname]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -40,7 +65,7 @@ const Nav = () => {
         />
       </Logo>
       {pathname === "/" ? (
-        <Login>Login</Login>
+        <Login onClick={handleAuth}>Login</Login>
       ) : (
         <Input
           value={keyword}
