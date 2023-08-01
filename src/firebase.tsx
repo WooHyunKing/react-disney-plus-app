@@ -7,13 +7,14 @@ import { getAuth } from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+console.log(process.env.REACT_APP_APIKEY);
 const firebaseConfig = {
-  apiKey: "AIzaSyC2xwE51DfnGIEabeZ_eLejmpqo-NoWG2c",
-  authDomain: "react-disney-plus-app-892cc.firebaseapp.com",
-  projectId: "react-disney-plus-app-892cc",
-  storageBucket: "react-disney-plus-app-892cc.appspot.com",
-  messagingSenderId: "156730087153",
-  appId: "1:156730087153:web:a24b351269ec2d2f2cbb50",
+  apiKey: process.env.REACT_APP_APIKEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_ID,
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 // Initialize Firebase
