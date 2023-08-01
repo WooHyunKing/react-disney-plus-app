@@ -11,10 +11,13 @@ import {
 import { sign } from "crypto";
 
 const Nav = () => {
+  const initialUserData = localStorage.getItem("userData")
+    ? JSON.parse(localStorage.getItem("userData") as string)
+    : {};
   const [show, setShow] = useState<boolean>(false);
   const { pathname } = useLocation();
   const [keyword, setKeyword] = useState("");
-  const [userData, setUserData] = useState<any>({});
+  const [userData, setUserData] = useState<any>(initialUserData);
 
   const navigate = useNavigate();
   const auth = getAuth();
@@ -40,6 +43,7 @@ const Nav = () => {
       .then(() => {
         setUserData({});
         navigate("/");
+        localStorage.removeItem("userData");
       })
       .catch((error) => console.log(error));
   };
